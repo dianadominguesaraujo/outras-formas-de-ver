@@ -3,14 +3,19 @@
   font-family: system-ui, sans-serif;
   color: #252821;
   background: #efefeb;
+  --edge: .375rem;
+  --safe-top: max(var(--edge), env(safe-area-inset-top));
+  --safe-right: max(var(--edge), env(safe-area-inset-right));
+  --safe-bottom: max(var(--edge), env(safe-area-inset-bottom));
+  --safe-left: max(var(--edge), env(safe-area-inset-left));
+  --control-size: max(44px, 2.75rem);
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
   height: 100vh;
   height: 100dvh;
-  display: grid;
-  grid-template-rows: auto minmax(4rem, 1fr) auto;
+  position: relative;
 }
 button {
   font: inherit;
@@ -25,32 +30,45 @@ button {
 button:hover { background: #e5e6df; }
 button[aria-disabled="true"] { color: #65675f; cursor: default; }
 :focus-visible { outline: 2px solid #356755; outline-offset: 3px; }
-.bar, .navigation {
-  width: min(100%, 76rem);
-  margin-inline: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .4rem;
-  padding: .5rem clamp(.65rem, 3vw, 2rem);
+#menu-open {
+  position: absolute;
+  top: var(--safe-top);
+  right: var(--safe-right);
+  min-height: var(--control-size);
+  padding-inline: .45rem;
 }
-#size-toggle { display: none; }
-#menu-open { margin-inline-start: auto; }
-.navigation { width: min(100%, 25rem); }
 .navigation button {
-  min-inline-size: 5.5rem;
-  min-block-size: 44px;
+  position: absolute;
+  bottom: var(--safe-bottom);
+  inline-size: var(--control-size);
+  min-block-size: var(--control-size);
+  padding: 0;
   border-color: transparent;
   font-size: 1.65rem;
   line-height: 1;
 }
+#previous { left: var(--safe-left); }
+#next { right: var(--safe-right); }
 .navigation button[aria-disabled="true"]:hover { background: transparent; }
-#position { text-align: center; font-size: .875rem; color: #4d5148; }
-.stage {
+#position {
+  position: absolute;
+  bottom: var(--safe-bottom);
+  left: calc(var(--safe-left) + var(--control-size));
+  right: calc(var(--safe-right) + var(--control-size));
+  min-height: var(--control-size);
   display: grid;
   place-items: center;
-  min-height: 0;
-  padding: .25rem clamp(.45rem, 1.25vw, 1.25rem);
+  text-align: center;
+  font-size: .8125rem;
+  color: #4d5148;
+}
+.stage {
+  position: absolute;
+  inset: calc(var(--safe-top) + var(--control-size) + var(--edge)) var(--safe-right)
+    calc(var(--safe-bottom) + var(--control-size) + var(--edge)) var(--safe-left);
+  display: grid;
+  place-items: center;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   container-type: size;
   touch-action: pan-y pinch-zoom;
 }
@@ -59,6 +77,11 @@ button[aria-disabled="true"] { color: #65675f; cursor: default; }
   width: min(100%, 75cqh);
   aspect-ratio: 3 / 4;
   grid-template-rows: minmax(0, 1fr);
+}
+.book.spread {
+  width: min(100%, 150cqh);
+  aspect-ratio: 3 / 2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .page { min-width: 0; min-height: 0; position: relative; }
 .information h2, .information h3 {
@@ -109,12 +132,18 @@ dialog::backdrop { background: rgb(22 24 20 / .58); }
 .zoom-scroll { overflow: auto; display: grid; place-items: safe center; background: #efefeb; }
 .zoom-scroll img { display: block; max-width: none; }
 .zoom-scroll img:not([src]) { display: none; }
-@media (min-width: 48rem) {
-  #size-toggle { display: inline-block; }
-  #size-toggle[aria-pressed="true"] { background: #e1e4db; }
-  .book.spread { width: min(100%, 150cqh, 72rem); aspect-ratio: 3 / 2; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .stage { padding-block: .65rem; }
-  .book-expanded .bar, .book-expanded .navigation { padding-block: .3rem; }
-  .book-expanded .stage { padding: .2rem clamp(.55rem, 1.25vw, 1.25rem); }
-  .book-expanded .book.spread { width: min(100%, 150cqh); }
+@media (orientation: landscape), (min-width: 48rem) {
+  body {
+    --rail: max(4rem, var(--control-size));
+    --side: max(var(--safe-left), var(--safe-right));
+  }
+  .stage { inset: var(--safe-top) calc(var(--side) + var(--rail) + var(--edge)) var(--safe-bottom); }
+  .navigation button { top: 50%; bottom: auto; transform: translateY(-50%); }
+  #position {
+    left: auto;
+    right: var(--safe-right);
+    width: var(--rail);
+    min-height: auto;
+    overflow-wrap: anywhere;
+  }
 }
