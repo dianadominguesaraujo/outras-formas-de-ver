@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Livro fotográfico digital do projeto Outras formas de ver, em Arroio Grande.">
+  <meta name="author" content="Diana Domingues Araujo">
+  <title>Outras formas de ver · Diana Domingues Araujo</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./content.js"></script>
+  <script defer src="./reader.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <button id="size-toggle" type="button" aria-pressed="false">Livro ampliado</button>
+    <button id="menu-open" type="button" aria-haspopup="dialog">Menu</button>
+  </header>
+  <main id="stage" class="stage" aria-label="Livro fotográfico">
+    <div id="book" class="book"></div>
+    <noscript>Ative o JavaScript para acessar o leitor.</noscript>
+  </main>
+  <nav class="navigation" aria-label="Navegação do livro">
+    <button id="previous" type="button" aria-label="Voltar" aria-disabled="true"><span aria-hidden="true">‹</span></button>
+    <span id="position" role="status" aria-atomic="true"></span>
+    <button id="next" type="button" aria-label="Avançar" aria-disabled="false"><span aria-hidden="true">›</span></button>
+  </nav>
+
+  <dialog id="menu" class="information" aria-labelledby="menu-title">
+    <div class="dialog-bar">
+      <h2 id="menu-title">Menu</h2>
+      <form method="dialog"><button autofocus>Fechar</button></form>
+    </div>
+    <nav id="menu-links" aria-label="Páginas complementares"></nav>
+    <section id="menu-content" hidden>
+      <button id="menu-back" type="button">Voltar ao menu</button>
+      <h3 id="info-title" tabindex="-1"></h3>
+      <div id="info-text"></div>
+    </section>
+  </dialog>
+
+  <dialog id="viewer" class="viewer" aria-label="Página ampliada">
+    <div class="dialog-bar">
+      <div class="zoom-controls" aria-label="Controles de zoom" role="group">
+        <button id="zoom-out" type="button" aria-label="Diminuir zoom">−</button>
+        <output id="zoom-value" aria-label="Nível de zoom">100%</output>
+        <button id="zoom-in" type="button" aria-label="Aumentar zoom">+</button>
+      </div>
+      <form method="dialog"><button autofocus>Fechar</button></form>
+    </div>
+    <div id="zoom-scroll" class="zoom-scroll" tabindex="0" role="region" aria-label="Área da página ampliada">
+      <img id="zoom-image" alt="">
+    </div>
+  </dialog>
+</body>
+</html>
