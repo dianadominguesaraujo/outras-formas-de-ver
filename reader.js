@@ -6,8 +6,7 @@ const stage = get('stage');
 const book = get('book');
 const previous = get('previous');
 const next = get('next');
-const wide = matchMedia('(min-width: 48rem)');
-const sizeToggle = get('size-toggle');
+const wide = matchMedia('(min-width: 48rem) and (pointer: fine), (min-width: 64rem)');
 const menu = get('menu');
 const viewer = get('viewer');
 const zoomScroll = get('zoom-scroll');
@@ -115,10 +114,6 @@ function turn(direction) {
 
 previous.addEventListener('click', () => turn(-1));
 next.addEventListener('click', () => turn(1));
-sizeToggle.addEventListener('click', () => {
-  const expanded = document.body.classList.toggle('book-expanded');
-  sizeToggle.setAttribute('aria-pressed', String(expanded));
-});
 wide.addEventListener('change', () => {
   if (!viewer.open && !menu.open) render();
 });
